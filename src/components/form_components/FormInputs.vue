@@ -1,14 +1,13 @@
 <template>
   <form @submit.prevent="onSubmit">
     <div class="error" v-if="!$v.email.required">Field is required</div>
-    <div class="error" v-if="!$v.email.regEmail">Must be currect email</div>
+    <div class="error" v-if="!$v.email.email">Must be currect email</div>
     <p class="form-group" :class="{ 'form-group--error': $v.email.$error }">
       <input
         type="text"
         placeholder="Email"
         class="field form__input"
         v-model.trim="email"
-        @input="setEmail($event.target.value)"
       />
     </p>
 
@@ -58,12 +57,12 @@
 import {
   required,
   minLength,
-  between,
+  email,
   helpers,
   sameAs,
 } from "vuelidate/lib/validators";
 
-const regEmail = helpers.regex("regex", /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+// const regEmail = helpers.regex("regex", /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
 const regHasNUmber = helpers.regex("regex", /[0-9]/);
 const regHasBigLetter = helpers.regex("regex", /[A-Z]/);
 
@@ -81,7 +80,8 @@ export default {
   validations: {
     email: {
       required,
-      regEmail,
+      // regEmail,
+      email
     },
     password: {
       required,
@@ -96,12 +96,7 @@ export default {
     validationAll: ["email"],
   },
 
-  methods: {
-    setEmail(value) {
-      console.log(this.$v.email)
-      this.email = value;
-      this.$v.email.$touch();
-    },
+  methods: {    
     onSubmit() {      
       if (this.$v.$invalid) {
         this.invalidSubmit = true;
@@ -111,16 +106,10 @@ export default {
       } else {        
         event.target.submit() 
       }
-    },
-    // setPassword(value){
-    //     value = value.trim();
-    //     this.password = value;
-    //     this.$v.password.$touch();
-    // }
+    }
   },
 };
 </script>
-
 <style scoped>
 form {
   display: flex;
