@@ -1,17 +1,16 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <div class="error" v-if="!$v.email.required">Field is required</div>
+    <div class="error" v-if="$v.email.$dirty && !$v.email.required">Field is required</div>
     <div class="error" v-if="!$v.email.email">Must be currect email</div>
-    <p class="form-group" :class="{ 'form-group--error': $v.email.$error }">
+    <p>
       <input
         type="text"
         placeholder="Email"
-        class="field form__input"
-        v-model.trim="email"
+        v-model.trim="$v.email.$model"
       />
     </p>
 
-    <div class="error" v-if="!$v.password.required">Field is required</div>
+    <div class="error" v-if="$v.password.$dirty && !$v.password.required">Field is required</div>
     <div class="error" v-else-if="!$v.password.minLength">
       minimum 4 letters
     </div>
@@ -24,23 +23,21 @@
     <p>
       <input
         type="password"
-        placeholder="Password"
-        class="field form__input"
+        placeholder="Password"        
         v-model.trim="$v.password.$model"
       />
     </p>
 
-    <div class="error" v-if="!$v.repeatPassword.required">
+    <div class="error" v-if="$v.repeatPassword.$dirty && !$v.repeatPassword.required">
       Field is required
     </div>
-    <div class="error" v-else-if="!$v.repeatPassword.samePassword">
+    <div class="error" v-else-if="$v.repeatPassword.$dirty && !$v.repeatPassword.samePassword">
       passwords must be same
     </div>
     <p>
       <input
         type="password"
         placeholder="Repeat Password"
-        class="field form__input"
         v-model.trim="$v.repeatPassword.$model"
       />
     </p>
@@ -74,7 +71,7 @@ export default {
       email: "",
       password: "",
       repeatPassword: "",
-      invalidSubmit: false      
+      invalidSubmit: false,
     };
   },
   validations: {
@@ -96,17 +93,17 @@ export default {
     validationAll: ["email"],
   },
 
-  methods: {    
-    onSubmit() {      
+  methods: {
+    onSubmit() {
       if (this.$v.$invalid) {
         this.invalidSubmit = true;
         setTimeout(() => {
           this.invalidSubmit = false;
         }, 500);
-      } else {        
-        event.target.submit() 
+      } else {
+        event.target.submit();
       }
-    }
+    },
   },
 };
 </script>
